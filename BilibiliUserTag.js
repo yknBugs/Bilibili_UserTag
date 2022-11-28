@@ -394,7 +394,12 @@
 
             //超出显示数量限制范围的折叠
             if (tag_list_size < tag_list.length && comment_list.textContent.includes(keyword_setting.tag_max_suffix) == false) {
-                comment_list.innerHTML += get_css_style(keyword_setting.tag_max_prefix + tag_list.length + keyword_setting.tag_max_suffix, keyword_setting.tag_max_color)
+                let hide_tag_title = keyword_setting.tag_max_prefix + tag_list.length + keyword_setting.tag_max_suffix
+                let hide_tag_list = tag_text_list[0]
+                for (k = 1; k < tag_list.length; k++) {
+                    hide_tag_list += tag_text_list[k]
+                }
+                comment_list.innerHTML += "<b style='color: " + keyword_setting.tag_max_color + "' title='"+ hide_tag_list +"'>" + hide_tag_title + "</b>"
             }
         }
     }
