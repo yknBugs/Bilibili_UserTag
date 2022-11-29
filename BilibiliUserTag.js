@@ -344,6 +344,10 @@
     const get_css_style = (show_text, show_color) => {
         return "<b style='color: " + show_color + "'>" + show_text + "</b>"
     }
+    
+    const get_title_style = (show_text, show_title, show_color) => {
+        return "<b style='color: " + show_color + "' title='"+ show_title +"'>" + show_text + "</b>"
+    }
 
     const save_lookup_result = (user, tag_list, tag_text_list) => {
         user_has_lookup.push({user: user, tag_list: tag_list, tag_text_list: tag_text_list})
@@ -394,7 +398,12 @@
 
             //超出显示数量限制范围的折叠
             if (tag_list_size < tag_list.length && comment_list.textContent.includes(keyword_setting.tag_max_suffix) == false) {
-                comment_list.innerHTML += get_css_style(keyword_setting.tag_max_prefix + tag_list.length + keyword_setting.tag_max_suffix, keyword_setting.tag_max_color)
+                let hide_tag_title = keyword_setting.tag_max_prefix + tag_list.length + keyword_setting.tag_max_suffix
+                let hide_tag_list = tag_text_list[0]
+                for (k = 1; k < tag_list.length; k++) {
+                    hide_tag_list += tag_text_list[k]
+                }
+                comment_list.innerHTML += get_title_style(hide_tag_title, hide_tag_list, keyword_setting.tag_max_color)
             }
         }
     }
