@@ -332,7 +332,9 @@
             }
         ],
         no_tag: "【 普通 】",
-        no_color: "#2ad100"
+        no_color: "#2ad100",
+        null_tag: "【 无动态 】",
+        null_color: "#2ad1d1"
     }
 
     //已经查过的用户标签保存到这里，避免重复查询
@@ -344,7 +346,7 @@
     const get_css_style = (show_text, show_color) => {
         return "<b style='color: " + show_color + "'>" + show_text + "</b>"
     }
-    
+
     const get_title_style = (show_text, show_title, show_color) => {
         return "<b style='color: " + show_color + "' title='"+ show_title +"'>" + show_text + "</b>"
     }
@@ -427,6 +429,7 @@
 
                 if (search_succeed == false) {
                     let blogurl = blog + pid
+                    // let xhr = new XMLHttpRequest()
                     GM_xmlhttpRequest({
                         method: "get",
                         url: blogurl,
@@ -436,12 +439,18 @@
                         },
                         onload: function (res) {
                             if (res.status === 200) {
+                                //console.log('成功')
                                 let st = JSON.stringify(JSON.parse(res.response).data)
 
                                 //添加标签
                                 var tag_matches = []
                                 var tag_text = []
                                 let tag_list_size = keyword_setting.keyword_list.length;
+                                if (!st.includes("http")) {
+                                    //没有任何动态
+                                    tag_matches.push(get_css_style(keyword_setting.null_tag, keyword_setting.null_color))
+                                    tag_text.push(keyword_setting.null_tag)
+                                }
                                 for (i = 0; i < tag_list_size; i++) {
                                     let keyword_size = keyword_setting.keyword_list[i].word_list.length
                                     if (keyword_size == 1) {
@@ -478,6 +487,7 @@
                                 save_lookup_result(pid, tag_matches, tag_text)
                             } else {
                                 console.log('失败')
+                                console.log(res)
                             }
                         },
                     });
